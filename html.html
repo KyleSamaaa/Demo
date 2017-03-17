@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'/>
+    <title>倒计时</title>
+    <style>
+        body{
+            background:#cccccc;
+        }
+        input[type="text"]{
+            height: 50px;
+            width: 50px;
+            font-size: 30px;
+            text-align: center;
+            margin: 10px 2px 10px 10px;
+        }
+        #count{
+            position: absolute;
+            /*margin: 10% 30%;*/
+            font-size: 120px;
+            border: 5px solid #565656;
+        }
+    </style>
+</head>
+<body>
+<div>倒计时：</div>
+<table>
+    <tr>
+        <td><input type="text" id="hours" >小时</td>
+        <td><input type="text" id="minutes">分钟</td>
+        <td><input type="text" id="seconds">秒</td>
+    </tr>
+</table>
+<input type="button" value="开始" id="start" onclick="startCount()">
+<input type="button" value="暂停" id="pause" onclick="scCount()">
+<input type="button" value="清零" id="zero" onclick="zeroCount()">
+<div id="count">00:00:00</div>
+
+<script>
+    var h = 0;          //时
+    var m = 0;          //分
+    var s = 0;          //秒
+    var time;
+    var cou = document.getElementById("count");
+    var isCounting = false;
+    posi();
+
+    function posi(){
+        var t = window.innerHeight||document.body.clientHeight;
+        var l = window.innerWidth||document.body.clientWidth;
+        var a = document.getElementById("count");
+        a.style.left=(l/2-a.offsetWidth/2)+"px";
+        a.style.top=(document.body.scrollTop+ t/2 -a.offsetHeight/2)+"px";
+    }
+
+    function detec(){
+            if(h>=0 && m>=0 && m<60 && s>=0 && s<60){
+                return true;
+            }
+        alert("输入参数有误，请重新输入。");
+        return false;
+    }
+    function startCount(){
+            h = parseInt(document.getElementById("hours").value);
+            m = parseInt(document.getElementById("minutes").value);
+            s = parseInt(document.getElementById("seconds").value);
+        if(isCounting == false){
+            isCounting = true;
+            if(detec()==false){
+                isCounting = false;
+                cou.innerHTML = "00:00:00";
+                return false;
+            }
+            setCount(h,m,s);
+        }
+    }
+    function setCount(hh,mm,ss){
+            var h = hh.toString();
+            var m = mm.toString();
+            var s = ss.toString();
+            if (hh < 10) {
+                h = "0" + h;
+            }
+            if (mm < 10) {
+                m = "0" + m;
+            }
+            if (ss < 10) {
+                s = "0" + s;
+            }
+            cou.innerHTML = h + ":" + m + ":" + s;
+            if (isCounting == true) {
+                counting();
+            }
+
+    }
+    function scCount(){
+        if(isCounting == true){
+            clearTimeout(time);
+            document.getElementById("pause").value = "继续";
+            isCounting = false;
+        }
+        else{
+            if(time != null){
+                isCounting = true;
+                document.getElementById("pause").value = "暂停";
+                s+=1;
+                counting();
+            }
+        }
+    }
+    function zeroCount(){
+        h = 0;
+        m = 0;
+        s = 0;
+        cou.innerHTML = "00:00:00";
+        isCounting = false;
+        time = null;
+        document.getElementById("pause").value = "暂停";
+    }
+    function counting(){
+
+        s--;
+        if(s<0){
+            s=59;
+            m--;
+            if(m<0){
+                m=59;
+                h--;
+                if(h<0){
+                    alert("计时完毕。");
+                    isCounting = false;
+                    clearTimeout(time);
+                    cou.innerHTML = "00:00:00";
+                    return;
+                }
+            }
+        }
+        if(isCounting == true) {
+            time = setTimeout("setCount(h,m,s)", 1000);
+        }
+
+    }
+
+</script>
+
+
+</body>
+</html>

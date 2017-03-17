@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>表单</title>
+    <style>
+        *{
+            margin: 0px;
+            padding: 0px;
+        }
+        table{
+            position: absolute;
+            top: 10%;
+            left: 25%;
+        }
+        td:nth-child(1){
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        button{
+            color: white;
+            height: 37px;
+            width: 72px;
+            background-color: rgba(65, 74, 228, 0.85);
+            border-radius: 4px;
+            font-size: 18px;
+            border: none;
+        }
+
+        [type="text"],[type="password"]{
+            height: 32px;
+            width: 420px;
+            border-radius: 6px;
+            font-size: 18px;
+            box-shadow: -2px 0px 5px #cccccc;
+        }
+        td:nth-child(2) span,input{
+            margin: 0px 0px 0px 16px;
+        }
+        .suggest{
+            text-align: left;
+            color: #cccccc;
+            font-size: 14px;
+        }
+        #submit{
+            float: right;
+        }
+
+
+    </style>
+</head>
+<body>
+
+<table id="name">
+    <tr>
+        <td><span>名称</span></td>
+        <td><input type="text"  name="name" onfocus="hint(name)" onblur="check(name)"></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td><span class="suggest" id="sname"></span></td>
+    </tr>
+    <tr>
+        <td><span>密码</span></td>
+        <td><input type="password"  name="password" onfocus="hint(name)" onblur="check(name)"></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>
+            <span class="suggest" id="spassword"></span>
+        </td>
+    </tr>
+    <tr>
+        <td><span>密码确认</span></td>
+        <td><input type="password"  name="passCon" onfocus="hint(name)" onblur="check(name)"></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>
+            <span class="suggest" id="spassCon"></span>
+    </tr>
+    <tr>
+        <td><span>邮箱</span></td>
+        <td><input type="text"  name="mail" onfocus="hint(name)" onblur="check(name)"></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>
+            <span class="suggest" id="smail"></span>
+        </td>
+    </tr>
+    <tr>
+        <td><span>手机</span></td>
+        <td><input type="text"  name="phone" onfocus="hint(name)" onblur="check(name)"></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>
+            <span class="suggest" id="sphone"></span>
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td><button id="submit" onclick="submit()">提交</button></td>
+    </tr>
+</table>
+
+<script>
+    var allMatch = true;
+    var sug = document.getElementsByClassName("suggest");
+    var type = document.getElementsByTagName("input");
+    function hint(tname){
+        switch(tname){
+            case "name":  sug[0].innerHTML = "请输入3~16位的字母,数字或下划线"; break;
+            case "password": sug[1].innerHTML = "请输入密码(3~16位的大小写字母，数字或下划线)"; break;
+            case "passCon": sug[2].innerHTML = "请重复一次密码"; break;
+            case "mail": sug[3].innerHTML = "请输入你的邮箱"; break;
+            case "phone": sug[4].innerHTML =  "请输入11位手机号码"; break;
+            default: alert("Fun hint ERROR"); break;
+        }
+    }
+    function check(tname){
+        var inputs = document.getElementsByName(tname)[0];
+        if(tname !== "passCon"){
+            var jud = isLegal(inputs.value,tname);
+            react(tname,jud);
+        }
+        else{
+            if(inputs.value === type[1].value && inputs.value !== "" ){
+                react(tname,true);
+            }
+            else{
+                react(tname,false);
+            }
+        }
+
+    }
+    function isLegal(str,tname){
+        var name = /^[a-zA-Z0-9_]{3,16}$/;
+        var password = /^\S{3,16}$/;
+        var phone = /^[1][0-9]{10}$/;
+        var mail = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}/;
+
+        switch(tname){
+            case "name": return name.test(str); break;
+            case "password":return password.test(str); break;
+            case "mail": return mail.test(str); break;
+            case "phone": return phone.test(str); break;
+            default: alert("Fun isLegal ERROR"); break;
+        }
+
+    }
+    function react(tname,jud){
+        var suggest = "";
+        var borderStyle = "";
+        if(jud){
+            borderStyle = "2px solid green";
+            suggest = "输入格式正确";
+            allMatch = true;
+        }
+        else{
+            borderStyle = "2px solid red";
+            suggest = "请输入正确格式";
+            allMatch = false;
+        }
+        if(tname === "passCon" && jud == false){
+            suggest = "两次输入密码须保持一致";
+            allMatch = false;
+        }
+        switch(tname){
+            case "name":sug[0].innerHTML = suggest;
+                type[0].style.border = borderStyle;break;
+            case "password": sug[1].innerHTML = suggest;
+                type[1].style.border = borderStyle; break;
+            case "passCon": sug[2].innerHTML = suggest;
+                type[2].style.border = borderStyle; break;
+            case "mail":sug[3].innerHTML = suggest;
+                type[3].style.border = borderStyle; break;
+            case "phone": sug[4].innerHTML = suggest;
+                type[4].style.border = borderStyle; break;
+            default: alert("Fun react ERROR"); break;
+        }
+    }
+    function submit(){
+        check("name");
+        check("password");
+        check("passCon");
+        check( "mail");
+        check("phone");
+        if(allMatch){
+            alert("输入成功。");
+        }
+        else{
+            alert("请重新修改输入。");
+        }
+    }
+
+</script>
+</body>
+</html>
