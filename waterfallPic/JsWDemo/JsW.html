@@ -293,53 +293,6 @@ function checkFlag(){
 
     if(lastContentFromTop < scorllTop + pageHeight){
         return true;
-    }
-}
-function imgLocation(parent,content){
-    //将parent(id)下所有content取出
-    var cparent = document.getElementById(parent);
-    var ccontent = getChildElement(cparent,content);
-    var imgWidth = ccontent[0].offsetWidth;//图片宽度
-    var cols = Math.floor(document.documentElement.clientWidth / imgWidth);//每行的图片张数
-    cparent.style.cssText = "width:"+imgWidth * cols+"px; margin:0 auto";
 
-    var BoxHeightArr = [];
-    for(var i = 0;i<ccontent.length;i++){
-        if(i<cols){
-            BoxHeightArr[i] = ccontent[i].offsetHeight;
-        }
-        else{
-            var minHeight = Math.min.apply(null,BoxHeightArr);
-            var minIndex = getMinHeightLoc(BoxHeightArr,minHeight);
-            ccontent[i].style.position = "absolute";
-            ccontent[i].style.top = minHeight+"px";
-            ccontent[i].style.left = ccontent[minIndex].offsetLeft+"px";
-            BoxHeightArr[minIndex] = BoxHeightArr[minIndex]+ccontent[i].offsetHeight;
-        }
-
-    }
-}
-
-function getMinHeightLoc(array,min){
-    //返回array数组里的min（最小值）所在位置
-    for(var x in array){
-        if(array[x] == min){
-            return x;
-        }
-    }
-
-}
-function getChildElement(parent,content){
-   //把parent里的content元素(class)内容取出返回
-    var contentArr = [];
-    var allContent = parent.getElementsByTagName("*");
-    for(var i = 0;i<allContent.length;i++){
-        if(allContent[i].className == content){
-            contentArr.push(allContent[i]);
-        }
-    }
-    return contentArr;
-}
-    </script>
 </body>
 </html>
