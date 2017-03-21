@@ -6,7 +6,7 @@ window.onload = function() {
     window.onscroll = function () {
         if (checkFlag()) {
             var cparent = document.getElementById("container");
-            var imgNum = 50;//需要加载图片数目
+            var imgNum = 47;//需要加载图片数目
             for(var i = 0;i < imgNum;i++){
                 var ccontent = document.createElement("div");
                 ccontent.className = "boxes";
